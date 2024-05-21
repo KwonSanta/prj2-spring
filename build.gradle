@@ -37,3 +37,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// java 21버전의 STR 문법 쓰기 위한 설정
+compileJava {
+    options.compilerArgs += ['--enable-preview']
+}
