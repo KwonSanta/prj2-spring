@@ -29,9 +29,16 @@ public class BoardController {
         return service.list();
     }
 
-    // api/board/xx
+    // /api/board/5
+    // /api/board/6
     @GetMapping("{id}")
-    public Board get(@PathVariable Integer id) {
-        return service.get(id);
+    public ResponseEntity get(@PathVariable Integer id) {
+        Board board = service.get(id);
+
+        if (board == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().body(board);
     }
 }
