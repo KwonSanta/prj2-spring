@@ -64,4 +64,8 @@ public class MemberService {
     public Member getByid(Integer id) {
         return mapper.selectById(id);
     }
+
+    public void remove(Integer id) {
+        mapper.deleteById(id);
+    }
 }
