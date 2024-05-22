@@ -3,6 +3,7 @@ package com.prj2spring.service.member;
 import com.prj2spring.domain.member.Member;
 import com.prj2spring.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,8 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberMapper mapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public void add(Member member) {
+        // password 암호화 해서 저장
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        // 앞/뒤 공백 제거
+        member.setEmail(member.getEmail().trim());
+        member.setNickName(member.getNickName().trim());
+
         mapper.insert(member);
     }
 
