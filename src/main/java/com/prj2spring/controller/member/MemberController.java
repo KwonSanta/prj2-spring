@@ -14,11 +14,10 @@ import java.util.List;
 @RequestMapping("/api/member")
 public class MemberController {
 
-    private final MemberService service;
+    final MemberService service;
 
     @PostMapping("signup")
     public ResponseEntity signup(@RequestBody Member member) {
-        // 확인 작업
         if (service.validate(member)) {
             service.add(member);
             return ResponseEntity.ok().build();
@@ -28,16 +27,16 @@ public class MemberController {
     }
 
     @GetMapping(value = "check", params = "email")
-    public ResponseEntity checkEmail(@RequestParam String email) {
+    public ResponseEntity checkEmail(@RequestParam("email") String email) {
         Member member = service.getByEmail(email);
-        if (member == null) { // null -> 사용할 수 있는 이메일
+        if (member == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(member.getEmail()); // DB 있으니 중복
+        return ResponseEntity.ok(email);
     }
 
     @GetMapping(value = "check", params = "nickName")
-    public ResponseEntity checkNickName(@RequestParam String nickName) {
+    public ResponseEntity checkNickName(@RequestParam("nickName") String nickName) {
         Member member = service.getByNickName(nickName);
         if (member == null) {
             return ResponseEntity.notFound().build();
@@ -52,7 +51,7 @@ public class MemberController {
 
     @GetMapping("{id}")
     public ResponseEntity get(@PathVariable Integer id) {
-        Member member = service.getByid(id);
+        Member member = service.getById(id);
         if (member == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -62,6 +61,7 @@ public class MemberController {
 
     @DeleteMapping("{id}")
     public ResponseEntity delete(@RequestBody Member member) {
+        System.out.println("member = " + member);
         if (service.hasAccess(member)) {
             service.remove(member.getId());
             return ResponseEntity.ok().build();

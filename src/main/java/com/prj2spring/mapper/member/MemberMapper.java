@@ -12,11 +12,10 @@ import java.util.List;
 public interface MemberMapper {
 
     @Insert("""
-            INSERT INTO member
-            (email, password, nick_name)
+            INSERT INTO member (email, password, nick_name)
             VALUES (#{email}, #{password}, #{nickName})
             """)
-    int insert(Member member);
+    public int insert(Member member);
 
     @Select("""
             SELECT *
@@ -33,14 +32,21 @@ public interface MemberMapper {
     Member selectByNickName(String nickName);
 
     @Select("""
-            SELECT id, email, nick_name, inserted
+            SELECT id,
+                   email,
+                   nick_name,
+                   inserted
             FROM member
-            ORDER BY id DESC
+            ORDER BY id DESC 
             """)
     List<Member> selectAll();
 
     @Select("""
-            SELECT id, email, password, nick_name, inserted
+            SELECT id,
+                   email,
+                   password,
+                   nick_name,
+                   inserted
             FROM member
             WHERE id = #{id}
             """)

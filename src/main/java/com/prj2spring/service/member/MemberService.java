@@ -14,13 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberMapper mapper;
-    private final BCryptPasswordEncoder passwordEncoder;
+    final MemberMapper mapper;
+    final BCryptPasswordEncoder passwordEncoder;
 
     public void add(Member member) {
-        // password 암호화 해서 저장
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        // 앞/뒤 공백 제거
         member.setEmail(member.getEmail().trim());
         member.setNickName(member.getNickName().trim());
 
@@ -49,6 +47,7 @@ public class MemberService {
         }
 
         String emailPattern = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
+
         if (!member.getEmail().trim().matches(emailPattern)) {
             return false;
         }
@@ -60,8 +59,7 @@ public class MemberService {
         return mapper.selectAll();
     }
 
-
-    public Member getByid(Integer id) {
+    public Member getById(Integer id) {
         return mapper.selectById(id);
     }
 
@@ -76,7 +74,6 @@ public class MemberService {
             return false;
         }
 
-        return passwordEncoder.matches(dbMember.getPassword(), member.getPassword());
+        return passwordEncoder.matches(member.getPassword(), dbMember.getPassword());
     }
-
 }
