@@ -3,10 +3,8 @@ package com.prj2spring.controller.member;
 import com.prj2spring.domain.member.Member;
 import com.prj2spring.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,5 +16,20 @@ public class MemberController {
     @PostMapping("signup")
     public void signup(@RequestBody Member member) {
         service.add(member);
+    }
+
+    @GetMapping(value = "check", params = "email")
+    public ResponseEntity checkEmail(@RequestParam String email) {
+        System.out.println("email = " + email);
+        Member member = service.getByEmail(email);
+        if (member == null) { // null -> 사용할 수 있는 이메일
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(member.getEmail()); // DB 있으니 중복
+    }
+
+    @GetMapping(value = "check", params = "nickName")
+    public void checkNickName(@RequestParam String nickName) {
+        System.out.println("nickName = " + nickName);
     }
 }

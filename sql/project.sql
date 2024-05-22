@@ -25,3 +25,4 @@ CREATE TABLE member
 )
 
 DESC board;
+SELECT * FROM member;
