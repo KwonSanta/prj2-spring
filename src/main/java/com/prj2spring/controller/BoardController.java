@@ -18,6 +18,7 @@ public class BoardController {
 
     @PostMapping("write")
     public ResponseEntity add(@RequestBody Board board) {
+        System.out.println("board = " + board);
         if (service.validate(board)) {
             service.add(board);
             return ResponseEntity.ok().build();
