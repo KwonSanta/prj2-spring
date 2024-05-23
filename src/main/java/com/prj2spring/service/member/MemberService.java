@@ -77,6 +77,19 @@ public class MemberService {
         return passwordEncoder.matches(member.getPassword(), dbMember.getPassword());
     }
 
+    public boolean hasAccessModify(Member member) {
+        Member dbMember = mapper.selectById(member.getId());
+        if (dbMember == null) {
+            return false;
+        }
+
+        if (!passwordEncoder.matches(member.getOldPassword(), dbMember.getPassword())) {
+            return false;
+        }
+
+        return true;
+    }
+
     public void modify(Member member) {
         if (member.getPassword() != null && member.getPassword().length() > 0) {
             // 패스워드가 입력되었으니 바꾸기
@@ -88,4 +101,6 @@ public class MemberService {
         }
         mapper.update(member);
     }
+
+
 }
