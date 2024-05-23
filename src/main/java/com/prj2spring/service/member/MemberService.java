@@ -76,4 +76,16 @@ public class MemberService {
 
         return passwordEncoder.matches(member.getPassword(), dbMember.getPassword());
     }
+
+    public void modify(Member member) {
+        if (member.getPassword() != null && member.getPassword().length() > 0) {
+            // 패스워드가 입력되었으니 바꾸기
+            member.setPassword(passwordEncoder.encode(member.getPassword()));
+        } else {
+            // 입력 안됐으니 기존값(dbMember id로 조회해서)으로 유지
+            Member dbMember = mapper.selectById(member.getId());
+            member.setPassword(dbMember.getPassword());
+        }
+        mapper.update(member);
+    }
 }
