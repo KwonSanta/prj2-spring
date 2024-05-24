@@ -51,8 +51,8 @@ public class BoardController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity delete(@PathVariable Integer id,
-                                 Authentication authentication) {
+    public ResponseEntity delete(@PathVariable Integer id
+            , Authentication authentication) {
         if (service.hasAccess(id, authentication)) {
             service.remove(id);
             return ResponseEntity.ok().build();
