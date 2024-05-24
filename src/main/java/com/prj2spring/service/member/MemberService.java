@@ -129,7 +129,7 @@ public class MemberService {
                         .issuer("self") // 토큰 발급자
                         .issuedAt(now) // 토큰 발급 시간
                         .expiresAt(now.plusSeconds(60 * 60 * 24 * 7)) // 토큰 만료 시간 (1주일 후)
-                        .subject(member.getEmail()) // 토큰의 주체(주로 사용자 식별자)
+                        .subject(db.getId().toString()) // 토큰의 주체(주로 사용자 식별자)
                         .claim("scope", "") // todo : "" -> 권한 명세 필요 // 추가 클레임 (예: 사용자 권한). 현재는 빈 문자열
                         .claim("nickName", db.getNickName()) // 사용자의 닉네임을 클레임에 추가
                         .build();
