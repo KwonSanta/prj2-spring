@@ -34,7 +34,7 @@ public interface MemberMapper {
                    nick_name,
                    inserted
             FROM member
-            ORDER BY id DESC 
+            ORDER BY id ASC 
             """)
     List<Member> selectAll();
 
@@ -56,11 +56,18 @@ public interface MemberMapper {
     int deleteById(Integer id);
 
     @Update("""
-            UPDATE member
-            SET 
+            UPDATE member 
+            SET
                 password = #{password},
                 nick_name = #{nickName}
             WHERE id = #{id}
             """)
     int update(Member member);
+
+    @Select("""
+            SELECT name
+            FROM authority
+            WHERE member_id = #{memberId}
+            """)
+    List<String> selectAuthorityByMemberId(Integer memberId);
 }

@@ -85,7 +85,6 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity modify(@RequestBody Member member,
                                  Authentication authentication) {
-
         if (service.hasAccessModify(member, authentication)) {
             service.modify(member);
             return ResponseEntity.ok().build();
@@ -97,10 +96,11 @@ public class MemberController {
     @PostMapping("token")
     public ResponseEntity token(@RequestBody Member member) {
         Map<String, Object> map = service.getToken(member);
+
         if (map == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
         return ResponseEntity.ok(map);
     }
-
 }

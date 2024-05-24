@@ -27,7 +27,7 @@ CREATE TABLE member
 DESC board;
 SELECT *
 FROM member
-ORDER BY id DESC ;
+ORDER BY id DESC;
 
 # board 테이블 수정
 # writer column 지우기
@@ -50,15 +50,35 @@ DESC board;
 
 SELECT *
 FROM board
-ORDER BY id DESC ;
+ORDER BY id DESC;
 
 #
 SELECT *
 FROM member
 WHERE id = 9;
 
-DELETE FROM board
+DELETE
+FROM board
 WHERE member_id = 9;
 DELETE
 FROM member
-WHERE id = 9
+WHERE id = 9;
+
+# 권한 테이블
+CREATE TABLE authority
+(
+    member_id INT         NOT NULL REFERENCES member (id),
+    name      VARCHAR(20) NOT NULL,
+    PRIMARY KEY (member_id, name)
+);
+
+INSERT INTO authority (member_id, name)
+VALUES (21, 'admin');
+
+SELECT *
+FROM authority;
+
+SELECT *
+FROM member
+ORDER BY id DESC ;
+
