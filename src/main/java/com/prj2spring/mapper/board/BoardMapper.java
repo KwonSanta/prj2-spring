@@ -28,7 +28,8 @@ public interface BoardMapper {
                    b.title,
                    b.content,
                    b.inserted,
-                   m.nick_name writer
+                   m.nick_name writer,
+                   b.member_id
             FROM board b JOIN member m ON b.member_id = m.id
             WHERE b.id = #{id}
             """)
@@ -48,4 +49,10 @@ public interface BoardMapper {
             WHERE id=#{id}
             """)
     int update(Board board);
+
+    @Delete("""
+            DELETE FROM board
+            WHERE member_id=#{memberId}
+            """)
+    int deleteByMemberId(Integer memberId);
 }

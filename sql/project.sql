@@ -26,7 +26,8 @@ CREATE TABLE member
 
 DESC board;
 SELECT *
-FROM member;
+FROM member
+ORDER BY id DESC ;
 
 # board 테이블 수정
 # writer column 지우기
@@ -47,4 +48,17 @@ ALTER TABLE board
 
 DESC board;
 
-SELECT * FROM board ORDER BY id DESC ;
+SELECT *
+FROM board
+ORDER BY id DESC ;
+
+#
+SELECT *
+FROM member
+WHERE id = 9;
+
+DELETE FROM board
+WHERE member_id = 9;
+DELETE
+FROM member
+WHERE id = 9
