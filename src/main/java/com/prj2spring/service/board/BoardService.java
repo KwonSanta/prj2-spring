@@ -46,10 +46,18 @@ public class BoardService {
         Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
         Integer rightPageNumber = leftPageNumber + 9;
         rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
+        // 이전
+        Integer prevPggeNumber = leftPageNumber - 1;
+        // 다음
+        Integer nextPggeNumber = rightPageNumber + 1;
 
         // 처음, 이전, 다음, 맨끝
-
-
+        if (prevPggeNumber > 0) {
+            pageInfo.put("prevPggeNumber", prevPggeNumber);
+        }
+        if (nextPggeNumber <= lastPageNumber) {
+            pageInfo.put("nextPggeNumber", nextPggeNumber);
+        }
         pageInfo.put("currentPageNumber", page);
         pageInfo.put("lastPageNumber", lastPageNumber);
         pageInfo.put("leftPageNumber", leftPageNumber);
