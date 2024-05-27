@@ -82,3 +82,11 @@ SELECT *
 FROM member
 ORDER BY id DESC ;
 
+# Pagination
+# 게시물 복붙해서 더미 데이터 만들기
+INSERT INTO board
+    (title, content, member_id)
+SELECT title, content, member_id
+FROM board;
+
+
