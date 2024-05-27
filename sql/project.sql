@@ -92,3 +92,37 @@ FROM board;
 SELECT *
 FROM member
 WHERE id = 21;
+
+SELECT * FROM member;
+
+UPDATE member
+SET nick_name = 'abcd'
+WHERE id = 22;
+
+UPDATE member
+SET nick_name = 'efgh'
+WHERE id = 23;
+
+UPDATE board
+SET member_id = 22
+WHERE id % 2 = 0;
+
+UPDATE board
+SET member_id = 23
+WHERE id % 2 = 1;
+
+select *
+from board;
+
+UPDATE board
+SET title = 'abc def',
+    content = 'ghi jkl'
+WHERE id % 3 = 0;
+UPDATE board
+SET title = 'mno pqr',
+    content = 'stu vwx'
+WHERE id % 3 = 1;
+UPDATE board
+SET title = 'yz1 234',
+    content = '567 890'
+WHERE id % 3 = 2;
