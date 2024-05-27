@@ -27,21 +27,22 @@ import java.security.interfaces.RSAPublicKey;
 public class AppConfiguration {
 
     @Value("${jwt.public.key}")
-    RSAPublicKey publicKey;
+    RSAPublicKey key;
 
     @Value("${jwt.private.key}")
-    RSAPrivateKey privateKey;
+    RSAPrivateKey priv;
 
     @Bean
-    public JwtDecoder JwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(this.publicKey).build();
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(this.key).build();
     }
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(this.publicKey)
-                .privateKey(this.privateKey)
+        JWK jwk = new RSAKey.Builder(this.key)
+                .privateKey(this.priv)
                 .build();
+
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
@@ -55,6 +56,7 @@ public class AppConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
         http.oauth2ResourceServer(configurer -> configurer.jwt(Customizer.withDefaults()));
+
         return http.build();
     }
 }

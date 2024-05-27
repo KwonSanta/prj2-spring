@@ -119,7 +119,6 @@ public class MemberService {
 
         JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
         token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
-
         return Map.of("token", token);
     }
 
