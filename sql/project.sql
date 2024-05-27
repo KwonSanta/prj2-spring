@@ -89,4 +89,6 @@ INSERT INTO board
 SELECT title, content, member_id
 FROM board;
 
-
+SELECT *
+FROM member
+WHERE id = 21;
