@@ -80,7 +80,7 @@ FROM authority;
 
 SELECT *
 FROM member
-ORDER BY id DESC ;
+ORDER BY id DESC;
 
 # Pagination
 # 게시물 복붙해서 더미 데이터 만들기
@@ -93,7 +93,8 @@ SELECT *
 FROM member
 WHERE id = 21;
 
-SELECT * FROM member;
+SELECT *
+FROM member;
 
 UPDATE member
 SET nick_name = 'abcd'
@@ -115,14 +116,27 @@ select *
 from board;
 
 UPDATE board
-SET title = 'abc def',
+SET title   = 'abc def',
     content = 'ghi jkl'
 WHERE id % 3 = 0;
 UPDATE board
-SET title = 'mno pqr',
+SET title   = 'mno pqr',
     content = 'stu vwx'
 WHERE id % 3 = 1;
 UPDATE board
-SET title = 'yz1 234',
+SET title   = 'yz1 234',
     content = '567 890'
 WHERE id % 3 = 2;
+
+# db에 file 저장
+DESC board;
+# 파일 테이블 생성
+CREATE TABLE board_file
+(
+    board_id INT          NOT NULL REFERENCES board (id),
+    name     VARCHAR(500) NOT NULL,
+    PRIMARY KEY (board_id, name)
+);
+DESC board_file;
+
+SELECT * FROM board_file;
