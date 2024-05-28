@@ -98,13 +98,30 @@ public class BoardService {
                 .map(name -> STR."http://172.30.1.46:8888/\{id}/\{name}")
                 .toList();
         board.setImageSrcList(imageSrcList);
-        
+
         // http://172.30.1.46:8888/{id}/{name}
         return board;
     }
 
     public void remove(Integer id) {
+        // file 명 조회
+        List<String> fileNames = mapper.selectFileNameByBoardId(id);
 
+        // disk 에 있는 실제 파일도 삭제
+        String dir = STR."/Users/santa/Desktop/study/temp/prj2/\{id}/";
+        for (String fileName : fileNames) {
+            File file = new File(dir + fileName);
+            file.delete();
+        }
+        // 부모 폴더 삭제
+        File dirFile = new File(dir);
+        if (!dirFile.exists()) {
+            dirFile.delete();
+        }
+
+        // board_file
+        mapper.deleteFileByBoardId(id);
+        // board
         mapper.deleteById(id);
     }
 
