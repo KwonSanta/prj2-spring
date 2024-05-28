@@ -126,7 +126,18 @@ public class BoardService {
         mapper.deleteById(id);
     }
 
-    public void edit(Board board) {
+    public void edit(Board board, List<String> removeFileList) {
+        if (removeFileList != null && removeFileList.size() > 0) {
+            for (String fileName : removeFileList) {
+                // disk 의 실제 파일 삭제
+                String path = STR."/Users/santa/Desktop/study/temp/prj2/\{board}/\{fileName}";
+                File file = new File(path);
+                file.delete();
+
+                // db recodes 삭제
+                mapper.deleteFileByBoardIdAndName(board.getId(), fileName);
+            }
+        }
         mapper.update(board);
     }
 
