@@ -13,5 +13,5 @@ public class Board {
     private Integer memberId; // foreign key 역할
     private LocalDateTime inserted;
 
-
+    private Integer numberOfImages; // 이미지 유무 게시글에 표시를 위한 용도
 }
