@@ -144,14 +144,13 @@ public interface BoardMapper {
 
     @Delete("""
             DELETE FROM board_like
-            WHERE board_id = #{boardId}
-              AND member_id = #{memberId}
+            WHERE board_id=#{boardId}
+              AND member_id=#{memberId}
             """)
     int deleteLikeByBoardIdAndMemberId(Integer boardId, Integer memberId);
 
     @Insert("""
-            INSERT INTO board_like
-            (board_id, member_id)
+            INSERT INTO board_like (board_id, member_id)
             VALUES (#{boardId}, #{memberId})
             """)
     int insertLikeByBoardIdAndMemberId(Integer boardId, Integer memberId);

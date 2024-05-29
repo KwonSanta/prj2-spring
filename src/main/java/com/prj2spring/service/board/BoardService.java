@@ -44,7 +44,7 @@ public class BoardService {
             for (MultipartFile file : files) {
                 // db에 해당 게시물의 파일 목록 저장
                 mapper.insertFileName(board.getId(), file.getOriginalFilename());
-                // 실제 파일 저장 (AWS S3)
+                // 실제 파일 저장 (s3)
                 String key = STR."prj2/\{board.getId()}/\{file.getOriginalFilename()}";
                 PutObjectRequest objectRequest = PutObjectRequest.builder()
                         .bucket(bucketName)
@@ -106,13 +106,13 @@ public class BoardService {
     public Board get(Integer id) {
         Board board = mapper.selectById(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
-        // 버킷객체 URL
+        // 버킷객체URL/{id}/{name}
         List<BoardFile> files = fileNames.stream()
                 .map(name -> new BoardFile(name, STR."\{srcPrefix}\{id}/\{name}"))
                 .toList();
+
         board.setFileList(files);
 
-        // http://172.30.1.46:8888/{id}/{name}
         return board;
     }
 
@@ -120,29 +120,20 @@ public class BoardService {
         // file 명 조회
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
 
-        /*// disk 에 있는 실제 파일도 삭제
-        String dir = STR."/Users/santa/Desktop/study/temp/prj2/\{id}/";
-        for (String fileName : fileNames) {
-            File file = new File(dir + fileName);
-            file.delete();
-        }
-        // 부모 폴더 삭제
-        File dirFile = new File(dir);
-        if (dirFile.exists()) {
-            dirFile.delete();
-        }*/ // disk 에 있는 파일 삭제
-        // s3 에 있는 file 삭제
+        // s3 에 있는 file
         for (String fileName : fileNames) {
             String key = STR."prj2/\{id}/\{fileName}";
             DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
                     .build();
+
             s3Client.deleteObject(objectRequest);
         }
 
         // board_file
         mapper.deleteFileByBoardId(id);
+
         // board
         mapper.deleteById(id);
     }
@@ -158,28 +149,32 @@ public class BoardService {
                         .build();
                 s3Client.deleteObject(objectRequest);
 
-                // db recodes 삭제
+                // db records 삭제
                 mapper.deleteFileByBoardIdAndName(board.getId(), fileName);
             }
         }
+
         if (addFileList != null && addFileList.length > 0) {
             List<String> fileNameList = mapper.selectFileNameByBoardId(board.getId());
             for (MultipartFile file : addFileList) {
                 String fileName = file.getOriginalFilename();
                 if (!fileNameList.contains(fileName)) {
-                    // 새 파일이 기존에 없을 때만 DB에 추가
+                    // 새 파일이 기존에 없을 때만 db에 추가
                     mapper.insertFileName(board.getId(), fileName);
                 }
-                // disk 에 쓰기 (자동덮어쓰기)
+                // s3 에 쓰기
                 String key = STR."prj2/\{board.getId()}/\{fileName}";
                 PutObjectRequest objectRequest = PutObjectRequest.builder()
                         .bucket(bucketName)
                         .key(key)
                         .acl(ObjectCannedACL.PUBLIC_READ)
                         .build();
+
                 s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
             }
         }
+
 
         mapper.update(board);
     }
@@ -192,15 +187,14 @@ public class BoardService {
     }
 
     public void like(Map<String, Object> req, Authentication authentication) {
-        Integer boardId = (Integer) req.get("boardId"); // 게시판 번호
-        Integer memberId = Integer.valueOf(authentication.getName()); // 사용자 member_id
+        Integer boardId = (Integer) req.get("boardId");
+        Integer memberId = Integer.valueOf(authentication.getName());
 
-        // 이미 좋아요 눌렀으면
-        // count: mapper 에서 진행된 게 있으면 count = 1이됨
+        // 이미 했으면
         int count = mapper.deleteLikeByBoardIdAndMemberId(boardId, memberId);
 
-        // 좋아요 누른적 없으면
-        if (count == 1) {
+        // 안했으면
+        if (count == 0) {
             mapper.insertLikeByBoardIdAndMemberId(boardId, memberId);
         }
     }
