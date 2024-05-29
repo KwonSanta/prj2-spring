@@ -103,7 +103,9 @@ public class BoardService {
                 "boardList", mapper.selectAllPaging(offset, searchType, keyword));
     }
 
-    public Board get(Integer id) {
+    public Map<String, Object> get(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+
         Board board = mapper.selectById(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
         // 버킷객체URL/{id}/{name}
@@ -113,7 +115,18 @@ public class BoardService {
 
         board.setFileList(files);
 
-        return board;
+        Map<String, Object> like = new HashMap<>();
+        if (authentication == null) {
+            like.put("like", false);
+        } else {
+            int c = mapper.selectLikeByBoardIdAndMemberId(id, authentication.getName());
+            like.put("like", c == 1);
+        }
+        like.put("count", mapper.selectCountLikeByBoardId(id));
+        result.put("board", board);
+        result.put("like", like);
+
+        return result;
     }
 
     public void remove(Integer id) {
@@ -187,9 +200,8 @@ public class BoardService {
     }
 
     public Map<String, Object> like(Map<String, Object> req, Authentication authentication) {
-        Map<String, Object> result = new HashMap<>(); // like, count 전달
-        result.put("like", false); // like 초기값 : false
-
+        Map<String, Object> result = new HashMap<>();
+        result.put("like", false);
         Integer boardId = (Integer) req.get("boardId");
         Integer memberId = Integer.valueOf(authentication.getName());
 
@@ -201,6 +213,7 @@ public class BoardService {
             mapper.insertLikeByBoardIdAndMemberId(boardId, memberId);
             result.put("like", true);
         }
+
         result.put("count", mapper.selectCountLikeByBoardId(boardId));
 
         return result;

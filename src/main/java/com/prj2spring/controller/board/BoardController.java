@@ -26,14 +26,7 @@ public class BoardController {
     public ResponseEntity add(
             Authentication authentication,
             Board board,
-            @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException { // 파일
-
-        if (files != null) {
-            System.out.println("files" + files.length);
-            for (MultipartFile file : files) {
-                System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
-            }
-        }
+            @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
 
         if (service.validate(board)) {
             service.add(board, files, authentication);
@@ -44,23 +37,25 @@ public class BoardController {
     }
 
     @GetMapping("list")
-    public Map<String, Object> list(@RequestParam(defaultValue = "1") Integer page,
-                                    @RequestParam(value = "type", required = false) String searchType,
-                                    @RequestParam(value = "keyword", defaultValue = "") String keyword) {
+    public Map<String, Object> list(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(value = "type", required = false) String searchType,
+            @RequestParam(value = "keyword", defaultValue = "") String keyword) {
         return service.list(page, searchType, keyword);
     }
 
     // /api/board/5
     // /api/board/6
     @GetMapping("{id}")
-    public ResponseEntity get(@PathVariable Integer id) {
-        Board board = service.get(id);
+    public ResponseEntity get(@PathVariable Integer id
+            , Authentication authentication) {
+        Map<String, Object> result = service.get(id, authentication);
 
-        if (board == null) {
+        if (result.get("board") == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok().body(board);
+        return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("{id}")
@@ -77,8 +72,10 @@ public class BoardController {
     @PutMapping("edit")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity edit(Board board,
-                               @RequestParam(value = "removeFileList[]", required = false) List<String> removeFileList,
-                               @RequestParam(value = "addFileList[]", required = false) MultipartFile[] addFileList,
+                               @RequestParam(value = "removeFileList[]", required = false)
+                               List<String> removeFileList,
+                               @RequestParam(value = "addFileList[]", required = false)
+                               MultipartFile[] addFileList,
                                Authentication authentication) throws IOException {
 
         if (!service.hasAccess(board.getId(), authentication)) {
@@ -100,5 +97,4 @@ public class BoardController {
 
         return service.like(req, authentication);
     }
-
 }
