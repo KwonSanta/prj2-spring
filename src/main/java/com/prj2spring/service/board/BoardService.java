@@ -190,4 +190,18 @@ public class BoardService {
         return board.getMemberId()
                 .equals(Integer.valueOf(authentication.getName()));
     }
+
+    public void like(Map<String, Object> req, Authentication authentication) {
+        Integer boardId = (Integer) req.get("boardId"); // 게시판 번호
+        Integer memberId = Integer.valueOf(authentication.getName()); // 사용자 member_id
+
+        // 이미 좋아요 눌렀으면
+        // count: mapper 에서 진행된 게 있으면 count = 1이됨
+        int count = mapper.deleteLikeByBoardIdAndMemberId(boardId, memberId);
+
+        // 좋아요 누른적 없으면
+        if (count == 1) {
+            mapper.insertLikeByBoardIdAndMemberId(boardId, memberId);
+        }
+    }
 }
