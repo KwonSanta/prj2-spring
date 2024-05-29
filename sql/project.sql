@@ -152,3 +152,9 @@ CREATE TABLE board_like
 
 SELECT *
 FROM board_like;
+
+SELECT *
+FROM member;
+
+SELECT *
+FROM authority;
