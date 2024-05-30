@@ -25,7 +25,7 @@ public interface CommentMapper {
                    m.nick_name
             FROM comment c JOIN member m ON c.member_id = m.id
             WHERE board_id = #{boardId}
-            ORDER BY id 
+            ORDER BY id DESC
             """)
     List<Comment> selectAllByBoardId(Integer boardId);
 }

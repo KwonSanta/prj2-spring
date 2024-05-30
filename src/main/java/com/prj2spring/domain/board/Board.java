@@ -16,5 +16,6 @@ public class Board {
 
     private Integer numberOfLike;
     private Integer numberOfImages; // 이미지 유무 게시글에 표시를 위한 용도
+    private Integer numberOfComments;
     private List<BoardFile> fileList; // 이미지 출력을 위해 이미지 경로 저장된 리스트
 }
