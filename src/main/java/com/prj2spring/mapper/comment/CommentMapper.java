@@ -23,16 +23,25 @@ public interface CommentMapper {
             SELECT c.id,
                    c.comment,
                    c.inserted,
+                   c.member_id,
                    m.nick_name
             FROM comment c JOIN member m ON c.member_id = m.id
             WHERE board_id = #{boardId}
-            ORDER BY id DESC
+            ORDER BY id 
             """)
     List<Comment> selectAllByBoardId(Integer boardId);
 
+
     @Delete("""
             DELETE FROM comment 
-                   WHERE id = #{id}
+            WHERE id = #{id}
             """)
     int deleteById(Integer id);
+
+    @Select("""
+            SELECT * 
+            FROM comment
+            WHERE id = #{id}
+            """)
+    Comment selectById(Integer id);
 }
