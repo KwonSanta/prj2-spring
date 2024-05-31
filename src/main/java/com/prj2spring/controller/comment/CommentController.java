@@ -21,12 +21,15 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity addComment(@RequestBody Comment comment,
                                      Authentication authentication) {
+
         if (service.validate(comment)) {
             service.add(comment, authentication);
+
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
         }
+
     }
 
     @GetMapping("list/{boardId}")
@@ -44,5 +47,13 @@ public class CommentController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+
+
+    }
+
+
+    @PutMapping("edit")
+    public void edit(@RequestBody Comment comment) {
+        service.update(comment);
     }
 }

@@ -1,10 +1,7 @@
 package com.prj2spring.mapper.comment;
 
 import com.prj2spring.domain.comment.Comment;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -45,6 +42,7 @@ public interface CommentMapper {
             """)
     Comment selectById(Integer id);
 
+
     @Delete("""
             DELETE FROM comment
             WHERE board_id = #{boardId}
@@ -55,5 +53,14 @@ public interface CommentMapper {
             DELETE FROM comment
             WHERE member_id = #{memberId}
             """)
-    int deleteCommentByMemberId(Integer memberId);
+    int deleteByMemberId(Integer memberId);
+
+
+    @Update("""
+            UPDATE comment
+            SET
+                comment = #{comment}
+            WHERE id = #{id}
+            """)
+    int update(Comment comment);
 }

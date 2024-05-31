@@ -3,7 +3,6 @@ package com.prj2spring.service.member;
 import com.prj2spring.domain.board.Board;
 import com.prj2spring.domain.member.Member;
 import com.prj2spring.mapper.board.BoardMapper;
-import com.prj2spring.mapper.comment.CommentMapper;
 import com.prj2spring.mapper.member.MemberMapper;
 import com.prj2spring.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,6 @@ public class MemberService {
     final JwtEncoder jwtEncoder;
     private final BoardMapper boardMapper;
     private final BoardService boardService;
-    private final CommentMapper commentMapper;
 
     public void add(Member member) {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -83,12 +81,13 @@ public class MemberService {
     public void remove(Integer id) {
         // 회원이 쓴 게시물 조회
         List<Board> boardList = boardMapper.selectByMemberId(id);
+
         // 각 게시물 지우기
         boardList.forEach(board -> boardService.remove(board.getId()));
+
         // 좋아요 지우기
         boardMapper.deleteLikeByMemberId(id);
-        // 댓글 지우기
-        commentMapper.deleteCommentByMemberId(id);
+
         // member 테이블에서 지우기
         mapper.deleteById(id);
     }
