@@ -168,3 +168,10 @@ CREATE TABLE comment
     comment   VARCHAR(500) NOT NULL,
     inserted  DATETIME     NOT NULL DEFAULT NOW()
 );
+
+INSERT INTO board
+(title, content, member_id)
+SELECT title, content, member_id
+FROM board;
+SELECT *
+FROM board

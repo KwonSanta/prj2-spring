@@ -16,9 +16,10 @@ public class Comment {
     private String nickName; // 작성자 별명
 
     public String getInserted() {
-        LocalDateTime beforeOneDay = LocalDateTime.now().minusDays(1);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDay = now.toLocalDate().atStartOfDay();
 
-        if (inserted.isBefore(beforeOneDay)) {
+        if (inserted.isBefore(startOfDay)) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             return inserted.format(formatter).toString();
         } else {
