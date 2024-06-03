@@ -183,7 +183,7 @@ public interface BoardMapper {
 
     @Delete("""
             DELETE FROM board_like
-            WHERE member_id=#{memberId}
+            WHERE member_id = #{memberId}
             """)
     int deleteLikeByMemberId(Integer memberId);
 }

@@ -152,7 +152,7 @@ public class BoardService {
         // board_like
         mapper.deleteLikeByBoardId(id);
 
-        // board_comment
+        // comment
         commentMapper.deleteByBoardId(id);
 
         // board

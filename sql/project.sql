@@ -22,7 +22,7 @@ CREATE TABLE member
     password  VARCHAR(100) NOT NULL,
     nick_name VARCHAR(100) NOT NULL UNIQUE,
     inserted  DATETIME     NOT NULL DEFAULT NOW()
-)
+);
 
 DESC board;
 SELECT *
